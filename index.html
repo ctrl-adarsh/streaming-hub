@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Streaming Services Hub</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #0a0a0a;
+            color: #ffffff;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #stars-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .star {
+            position: absolute;
+            background-color: #ffffff;
+            border-radius: 50%;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 1200px;
+            width: 100%;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            text-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
+            animation: textGlow 3s infinite;
+        }
+
+        @keyframes textGlow {
+            0% { text-shadow: 0 0 10px rgba(255, 0, 0, 0.5); }
+            50% { text-shadow: 0 0 20px rgba(255, 255, 255, 0.8); }
+            100% { text-shadow: 0 0 10px rgba(255, 0, 0, 0.5); }
+        }
+
+        .services {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            width: 100%;
+        }
+
+        .service-box {
+            width: 250px;
+            height: 250px;
+            position: relative;
+            cursor: pointer;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s, box-shadow 0.3s;
+            background-position: center;
+            background-size: cover;
+        }
+
+        .service-box:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(255, 0, 0, 0.4);
+        }
+
+        .service-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            transition: background 0.3s;
+        }
+
+        .service-box:hover::before {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .service-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1;
+            padding: 1rem;
+            box-sizing: border-box;
+        }
+
+        .service-logo-container {
+            width: 140px;
+            height: 140px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .service-logo {
+            max-width: 100%;
+            max-height: 100%;
+            filter: drop-shadow(0 0 8px rgba(255, 0, 0, 0.7));
+            transition: transform 0.3s, filter 0.3s;
+        }
+
+        .service-box:hover .service-logo {
+            transform: scale(1.1);
+            filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.9));
+        }
+
+        .service-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+        }
+
+        .netflix {
+            background: radial-gradient(circle, #e50914 0%, #8b0000 100%);
+        }
+
+        .prime {
+            background: radial-gradient(circle, #00a8e1 0%, #232f3e 100%);
+        }
+
+        .hotstar {
+            background: radial-gradient(circle, #1f80e0 0%, #0e3166 100%);
+        }
+
+        @media (max-width: 800px) {
+            .services {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .service-box {
+                width: 220px;
+                height: 220px;
+            }
+            
+            .service-logo-container {
+                width: 120px;
+                height: 120px;
+            }
+        }
+
+        /* Pulse animation for boxes */
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(255, 0, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); }
+        }
+    </style>
+</head>
+<body>
+    <div id="stars-container"></div>
+    <div class="container">
+        <h1>What do you wanna watch ??</h1>
+        <div class="services">
+            <div class="service-box netflix" onclick="redirectTo('https://www.netflix.com')">
+                <div class="service-content">
+                    <div class="service-logo-container">
+                        <img src="netflix_logo.png" alt="Netflix Logo" class="service-logo">
+                    </div>
+                    <div class="service-name">Netflix</div>
+                </div>
+            </div>
+            
+            <div class="service-box prime" onclick="redirectTo('https://www.primevideo.com')">
+                <div class="service-content">
+                    <div class="service-logo-container">
+                        <img src="prime_logo.png" alt="Prime Video Logo" class="service-logo">
+                    </div>
+                    <div class="service-name">Prime Video</div>
+                </div>
+            </div>
+            
+            <div class="service-box hotstar" onclick="redirectTo('https://www.hotstar.com')">
+                <div class="service-content">
+                    <div class="service-logo-container">
+                        <img src="jio_logo.png" alt="Hotstar Logo" class="service-logo">
+                    </div>
+                    <div class="service-name">Jio Hotstar</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function redirectTo(url) {
+            // Add a smooth transition effect before redirecting
+            document.body.style.opacity = '0';
+            document.body.style.transition = 'opacity 0.5s';
+            
+            // Wait for animation to complete before redirecting
+            setTimeout(() => {
+                window.location.href = url;
+            }, 500);
+        }
+
+        // Create dynamic starry background
+        document.addEventListener('DOMContentLoaded', () => {
+            const starsContainer = document.getElementById('stars-container');
+            
+            // Create stars with different sizes and opacities
+            for (let i = 0; i < 200; i++) {
+                createStar(starsContainer);
+            }
+            
+            // Add shooting stars periodically
+            setInterval(() => {
+                createShootingStar(starsContainer);
+            }, 3000);
+            
+            // Apply pulse animation to service boxes
+            const serviceBoxes = document.querySelectorAll('.service-box');
+            serviceBoxes.forEach((box, index) => {
+                setTimeout(() => {
+                    box.style.animation = `pulse 2s infinite ${index * 0.5}s`;
+                }, index * 500);
+            });
+            
+            // Create twinkling effect for stars
+            setInterval(() => {
+                const stars = document.querySelectorAll('.star');
+                const randomStar = stars[Math.floor(Math.random() * stars.length)];
+                if (randomStar) {
+                    randomStar.style.opacity = '1';
+                    randomStar.style.transform = 'scale(1.5)';
+                    randomStar.style.transition = 'opacity 0.3s, transform 0.3s';
+                    
+                    setTimeout(() => {
+                        randomStar.style.opacity = Math.random() * 0.7 + 0.3;
+                        randomStar.style.transform = 'scale(1)';
+                    }, 300);
+                }
+            }, 100);
+        });
+        
+        function createStar(container) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            
+            // Random size, smaller stars are more common
+            const size = Math.random() * 3 + 1;
+            star.style.width = `${size}px`;
+            star.style.height = `${size}px`;
+            
+            // Random position
+            star.style.left = `${Math.random() * 100}vw`;
+            star.style.top = `${Math.random() * 100}vh`;
+            
+            // Random opacity for twinkling effect
+            star.style.opacity = Math.random() * 0.7 + 0.3;
+            
+            // White, light grey, or very light blue
+            const colorValue = Math.floor(Math.random() * 30);
+            const colors = [
+                `rgb(255, 255, 255)`, // White
+                `rgb(225, 225, 255)`, // Very light blue
+                `rgb(220, 220, 220)` // Light grey
+            ];
+            star.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            
+            container.appendChild(star);
+        }
+        
+        function createShootingStar(container) {
+            const shootingStar = document.createElement('div');
+            shootingStar.className = 'star shooting-star';
+            
+            // Style the shooting star
+            shootingStar.style.width = '2px';
+            shootingStar.style.height = '2px';
+            shootingStar.style.backgroundColor = '#FFFFFF';
+            shootingStar.style.position = 'absolute';
+            
+            // Initial position (off-screen to the top or right)
+            const startFromTop = Math.random() > 0.5;
+            if (startFromTop) {
+                shootingStar.style.left = `${Math.random() * 100}vw`;
+                shootingStar.style.top = '-2px';
+            } else {
+                shootingStar.style.left = '100vw';
+                shootingStar.style.top = `${Math.random() * 50}vh`;
+            }
+            
+            // Add a trail with box-shadow
+            shootingStar.style.boxShadow = '0 0 20px 2px rgba(255, 255, 255, 0.7)';
+            
+            // Add to the container
+            container.appendChild(shootingStar);
+            
+            // Calculate end position (diagonal trajectory)
+            const endLeft = startFromTop ? 
+                parseFloat(shootingStar.style.left) - Math.random() * 200 - 100 : 
+                -10;
+            const endTop = startFromTop ? 
+                window.innerHeight + 10 : 
+                parseFloat(shootingStar.style.top) + Math.random() * 200 + 100;
+            
+            // Animate the shooting star
+            shootingStar.style.transition = `transform 1s linear, opacity 1s linear`;
+            
+            // Start the animation after a small delay to ensure the initial position is set
+            setTimeout(() => {
+                const xDistance = endLeft - parseFloat(shootingStar.style.left);
+                const yDistance = endTop - parseFloat(shootingStar.style.top);
+                shootingStar.style.transform = `translate(${xDistance}px, ${yDistance}px)`;
+                shootingStar.style.opacity = '0';
+                
+                // Remove after animation completes
+                setTimeout(() => {
+                    shootingStar.remove();
+                }, 1000);
+            }, 10);
+        }
+    </script>
+</body>
+</html>
