@@ -237,15 +237,10 @@
     </div>
 
     <script>
-        function redirectTo(url) {
-            // Add a smooth transition effect before redirecting
-            document.body.style.opacity = '0';
-            document.body.style.transition = 'opacity 0.5s';
-            
+
+        function redirectTo(url) {            
             // Wait for animation to complete before redirecting
-            setTimeout(() => {
-                window.location.href = url;
-            }, 500);
+            window.open(url, '_blank');
         }
 
         // Create dynamic starry background
