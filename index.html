@@ -11,29 +11,29 @@
             font-family: 'Arial', sans-serif;
             background-color: #0a0a0a;
             color: #ffffff;
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
             position: relative;
+            overflow-x: hidden;
         }
 
         #stars-container {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             z-index: -1;
-            overflow: hidden;
         }
 
         .star {
             position: absolute;
             background-color: #ffffff;
             border-radius: 50%;
+            transition: opacity 0.5s, transform 0.5s;
         }
 
         .container {
@@ -41,12 +41,13 @@
             flex-direction: column;
             align-items: center;
             max-width: 1200px;
-            width: 100%;
+            width: 90%;
+            padding: 2rem 0;
             z-index: 1;
         }
 
         h1 {
-            font-size: 3rem;
+            font-size: clamp(1.8rem, 5vw, 3rem);
             margin-bottom: 2rem;
             text-align: center;
             text-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
@@ -63,13 +64,13 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 2rem;
+            gap: clamp(1rem, 3vw, 2rem);
             width: 100%;
         }
 
         .service-box {
-            width: 250px;
-            height: 250px;
+            width: clamp(200px, calc(100% - 2rem), 250px);
+            height: clamp(200px, 30vw, 250px);
             position: relative;
             cursor: pointer;
             border-radius: 15px;
@@ -116,8 +117,8 @@
         }
 
         .service-logo-container {
-            width: 140px;
-            height: 140px;
+            width: clamp(100px, 50%, 140px);
+            height: clamp(100px, 50%, 140px);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -137,7 +138,7 @@
         }
 
         .service-name {
-            font-size: 1.5rem;
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
             font-weight: bold;
             text-align: center;
             text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
@@ -155,25 +156,13 @@
             background: radial-gradient(circle, #1f80e0 0%, #0e3166 100%);
         }
 
-        @media (max-width: 800px) {
-            .services {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            h1 {
-                font-size: 2rem;
-            }
-            
-            .service-box {
-                width: 220px;
-                height: 220px;
-            }
-            
-            .service-logo-container {
-                width: 120px;
-                height: 120px;
-            }
+        .shooting-star {
+            position: absolute;
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,0) 100%);
+            height: 2px;
+            border-radius: 0;
+            transform-origin: left center;
+            z-index: -1;
         }
 
         /* Pulse animation for boxes */
@@ -181,6 +170,35 @@
             0% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); }
             70% { box-shadow: 0 0 0 15px rgba(255, 0, 0, 0); }
             100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); }
+        }
+
+        /* Mobile-specific adjustments */
+        @media (max-width: 767px) {
+            .container {
+                padding: 1rem;
+                width: 95%;
+            }
+            
+            .services {
+                gap: 1.5rem;
+            }
+            
+            .service-box {
+                width: 85%;
+                max-width: 300px;
+                height: 180px;
+            }
+        }
+
+        /* Small screens */
+        @media (max-width: 480px) {
+            h1 {
+                margin-bottom: 1.5rem;
+            }
+            
+            .service-logo-container {
+                margin-bottom: 0.5rem;
+            }
         }
     </style>
 </head>
@@ -242,7 +260,7 @@
             // Add shooting stars periodically
             setInterval(() => {
                 createShootingStar(starsContainer);
-            }, 3000);
+            }, 2000);
             
             // Apply pulse animation to service boxes
             const serviceBoxes = document.querySelectorAll('.service-box');
@@ -254,19 +272,30 @@
             
             // Create twinkling effect for stars
             setInterval(() => {
-                const stars = document.querySelectorAll('.star');
-                const randomStar = stars[Math.floor(Math.random() * stars.length)];
-                if (randomStar) {
-                    randomStar.style.opacity = '1';
-                    randomStar.style.transform = 'scale(1.5)';
-                    randomStar.style.transition = 'opacity 0.3s, transform 0.3s';
+                const stars = document.querySelectorAll('.star:not(.shooting-star)');
+                if (stars.length > 0) {
+                    const randomStars = [];
+                    // Choose multiple random stars to twinkle
+                    for (let i = 0; i < 5; i++) {
+                        randomStars.push(stars[Math.floor(Math.random() * stars.length)]);
+                    }
                     
-                    setTimeout(() => {
-                        randomStar.style.opacity = Math.random() * 0.7 + 0.3;
-                        randomStar.style.transform = 'scale(1)';
-                    }, 300);
+                    randomStars.forEach(star => {
+                        if (star) {
+                            star.style.opacity = '1';
+                            star.style.transform = 'scale(1.5)';
+                            
+                            setTimeout(() => {
+                                star.style.opacity = Math.random() * 0.7 + 0.3;
+                                star.style.transform = 'scale(1)';
+                            }, 300);
+                        }
+                    });
                 }
             }, 100);
+            
+            // Add subtle movement to stars - using a simpler technique
+            animateStars();
         });
         
         function createStar(container) {
@@ -278,74 +307,107 @@
             star.style.width = `${size}px`;
             star.style.height = `${size}px`;
             
-            // Random position
-            star.style.left = `${Math.random() * 100}vw`;
-            star.style.top = `${Math.random() * 100}vh`;
+            // Random position - using viewport units
+            const posX = Math.random() * 100;
+            const posY = Math.random() * 100;
+            star.style.left = `${posX}vw`;
+            star.style.top = `${posY}vh`;
+            
+            // Store original position as data attributes
+            star.dataset.originalX = posX;
+            star.dataset.originalY = posY;
             
             // Random opacity for twinkling effect
             star.style.opacity = Math.random() * 0.7 + 0.3;
             
             // White, light grey, or very light blue
-            const colorValue = Math.floor(Math.random() * 30);
             const colors = [
-                `rgb(255, 255, 255)`, // White
-                `rgb(225, 225, 255)`, // Very light blue
-                `rgb(220, 220, 220)` // Light grey
+                'rgb(255, 255, 255)', // White
+                'rgb(225, 225, 255)', // Very light blue
+                'rgb(220, 220, 220)' // Light grey
             ];
             star.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
             
+            // Add a random movement amplitude (small, to keep subtle)
+            star.dataset.amplitude = (Math.random() * 0.5 + 0.1).toFixed(2);
+            // Random phase offset for varied movement
+            star.dataset.phase = (Math.random() * Math.PI * 2).toFixed(4);
+            // Random speed multiplier for each star
+            star.dataset.speed = (Math.random() * 0.5 + 0.5).toFixed(2);
+            
             container.appendChild(star);
+            return star;
         }
         
         function createShootingStar(container) {
             const shootingStar = document.createElement('div');
             shootingStar.className = 'star shooting-star';
             
-            // Style the shooting star
-            shootingStar.style.width = '2px';
+            // Random length
+            const length = Math.random() * 100 + 50;
+            shootingStar.style.width = `${length}px`;
             shootingStar.style.height = '2px';
-            shootingStar.style.backgroundColor = '#FFFFFF';
-            shootingStar.style.position = 'absolute';
             
-            // Initial position (off-screen to the top or right)
-            const startFromTop = Math.random() > 0.5;
-            if (startFromTop) {
-                shootingStar.style.left = `${Math.random() * 100}vw`;
-                shootingStar.style.top = '-2px';
-            } else {
-                shootingStar.style.left = '100vw';
-                shootingStar.style.top = `${Math.random() * 50}vh`;
-            }
+            // Initial position - using viewport units
+            const startX = Math.random() * 70 + 30; // Between 30-100% of viewport width
+            const startY = Math.random() * 40; // Top 40% of viewport
+            shootingStar.style.left = `${startX}vw`;
+            shootingStar.style.top = `${startY}vh`;
             
             // Add a trail with box-shadow
-            shootingStar.style.boxShadow = '0 0 20px 2px rgba(255, 255, 255, 0.7)';
+            shootingStar.style.boxShadow = '0 0 10px 2px rgba(255, 255, 255, 0.7)';
             
-            // Add to the container
+            // Calculate angle (diagonal trajectory from top-right to bottom-left)
+            const angle = 225 + (Math.random() * 30 - 15); // Around 225 degrees with variation
+            shootingStar.style.transform = `rotate(${angle}deg)`;
+            
+            // Add to the container with initial opacity 0
+            shootingStar.style.opacity = '0';
             container.appendChild(shootingStar);
             
-            // Calculate end position (diagonal trajectory)
-            const endLeft = startFromTop ? 
-                parseFloat(shootingStar.style.left) - Math.random() * 200 - 100 : 
-                -10;
-            const endTop = startFromTop ? 
-                window.innerHeight + 10 : 
-                parseFloat(shootingStar.style.top) + Math.random() * 200 + 100;
-            
             // Animate the shooting star
-            shootingStar.style.transition = `transform 1s linear, opacity 1s linear`;
-            
-            // Start the animation after a small delay to ensure the initial position is set
             setTimeout(() => {
-                const xDistance = endLeft - parseFloat(shootingStar.style.left);
-                const yDistance = endTop - parseFloat(shootingStar.style.top);
-                shootingStar.style.transform = `translate(${xDistance}px, ${yDistance}px)`;
-                shootingStar.style.opacity = '0';
+                shootingStar.style.opacity = '1';
+                shootingStar.style.transition = `transform 1.5s linear, opacity 0.2s ease-in, opacity 0.5s ease-out 1s`;
+                shootingStar.style.transform = `rotate(${angle}deg) translateX(-${length + 100}px)`;
                 
                 // Remove after animation completes
                 setTimeout(() => {
                     shootingStar.remove();
-                }, 1000);
+                }, 1500);
             }, 10);
+        }
+        
+        function animateStars() {
+            const stars = document.querySelectorAll('.star:not(.shooting-star)');
+            let time = 0;
+            
+            function animate() {
+                time += 0.01;
+                
+                stars.forEach(star => {
+                    if (!star.dataset.originalX || !star.dataset.originalY) return;
+                    
+                    const amplitude = parseFloat(star.dataset.amplitude || 0.3);
+                    const phase = parseFloat(star.dataset.phase || 0);
+                    const speed = parseFloat(star.dataset.speed || 1);
+                    
+                    const originalX = parseFloat(star.dataset.originalX);
+                    const originalY = parseFloat(star.dataset.originalY);
+                    
+                    // Use sine and cosine for circular/elliptical movement
+                    // Multiply by vw/vh to keep the movement relative to viewport size
+                    const offsetX = amplitude * Math.sin(time * speed + phase);
+                    const offsetY = amplitude * Math.cos(time * speed + phase * 0.7);
+                    
+                    star.style.left = `calc(${originalX}vw + ${offsetX}vw)`;
+                    star.style.top = `calc(${originalY}vh + ${offsetY}vh)`;
+                });
+                
+                requestAnimationFrame(animate);
+            }
+            
+            requestAnimationFrame(animate);
         }
     </script>
 </body>
